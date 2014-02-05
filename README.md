@@ -1,10 +1,11 @@
 # doge-cloj
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure library designed to connect to the DogeCoinD API.
+Still in heavy development.
 
 ## Usage
 
-FIXME
+/
 
 ## License
 
