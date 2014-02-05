@@ -7,6 +7,13 @@ Still in heavy development.
 
 /
 
+## Installation
+
+`doge-clj` is available as a Maven artifact from [Clojars](http://clojars.org/doge-cloj):
+
+    :dependencies
+      [[doge-cloj "0.1.0-SNAPSHOT"] ...]
+
 ## License
 
 Copyright © 2014 FIXME
