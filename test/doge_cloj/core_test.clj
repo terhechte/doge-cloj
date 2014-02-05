@@ -5,15 +5,15 @@
         [doge-cloj.config :as config]
         clj-http.fake))
 
-; not working yet
-(comment deftest test-running
-  (testing "Test the getAccount call"
-    (with-fake-routes
-      {
-       (config/url-for) (fn [r] {:status 200 :headers {} :body "this is a test"})
-       }
-      (is (= [] (doge/getInfo "test-wallet")))
-      )))
+(defn setup-test
+  "setup and teardown of test environment"
+  [f]
+  ; your username and password
+  (config/set-config {:username "rpcuser"
+                      :password "rpcpassword"})
+  (f))
+
+(use-fixtures :once setup-test)
 
 (deftest test-config
   (testing "Configuration"

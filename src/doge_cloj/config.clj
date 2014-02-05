@@ -3,15 +3,21 @@
 
 (declare config)
 
+(def defaults {:username "" :password "" :host "localhost" :port "22555" :scheme "http"})
+
 (defn url-for []
   (format "%s://%s:%s" (:scheme (config)) (:host (config)) (:port (config))))
 
-(let [defaults {:username "" :password "" :host "localhost" :port "22555" :scheme "http"}]
-  (def config
-    (memoize
-     #(try 
-        (let [config (apply hash-map (read-string (slurp (File. "config.clj"))))]
-          (merge defaults config))
-        (catch Exception e (do 
-                             (print "Configuration not found using defaults.")
-                             defaults))))))
+(def config-data (atom defaults))
+
+(defn set-config
+  "Set config with a map with the following keys {:username :password :host :port :scheme}
+   only username and password are required, the rest defaults to http://localhost:22555"
+  [new-config]
+  (reset! config-data (merge defaults new-config)))
+
+(defn config
+  "Get the current config dictionary"
+  []
+  @config-data)
+
