@@ -1,21 +1,49 @@
 # doge-cloj
 
 A Clojure library designed to connect to the DogeCoinD API.
-Still in heavy development.
+Still pretty untested and lacking good unit tests.
 
 ## Usage
 
-/
+Import it into your namespace
+
+``` Clojure
+(ns ...
+    (:require
+        [doge-cloj.core :as doge]
+        [doge-cloj.config :as doge-config]
+        ...
+    ))
+```
+
+In order to work, the library needs to be initialized with the username and password 
+
+``` Clojure
+  (doge-config/set-config {:username "rpcuser"
+                      :password "rpcpassword"})
+```
+
+Here, `rpcuser` and  `rpcpassword` are the dogecoind rpc login credentials that you defined in dogecoin.conf or that you set up on the commandline when starting dogecoind.
+
+After this, you can just call the methods that are defined in core.clj
+
+``` Clojure
+(println (doge/getInfo))
+```
 
 ## Installation
 
 `doge-clj` is available as a Maven artifact from [Clojars](http://clojars.org/doge-cloj):
 
-    :dependencies
-      [[doge-cloj "0.1.0-SNAPSHOT"] ...]
+In your project.clj;
+
+``` Clojure
+:dependencies [[doge-cloj "0.1.0-SNAPSHOT"]
+...]
+```
 
 ## License
 
-Copyright © 2014 FIXME
+Copyright © 2014 Benedikt Terhechte
 
 Distributed under the Eclipse Public License, the same as Clojure.
