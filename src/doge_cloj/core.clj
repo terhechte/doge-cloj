@@ -11,6 +11,11 @@
 ; So for detailed documentation on some of these calls you may want to
 ; go for the Bitcoin docs right away.
 
+;; Accounts:
+;Accounts are named with arbitrary strings; you may use any JSON string other than "*" (JSON strings are sent and returned as UTF-8 encoded Unicode).
+
+; Dogecoin creates two accounts automatically: it implicitly creates a default account with the empty string as its name, and it explicitly creates an account named Your Address when a new wallet is created.
+
 
 (defmacro def-doge-rpc [name doc & rest]
   `(defn ~name ~doc ~@rest
@@ -97,11 +102,13 @@
   [dogecoinaddress])
 
 (def-doge-rpc getAccountAddress
-  "account: String"
+  "getaccountaddress will return the same address until coins are received on that address; once coins have been received, it will generate and return a new address.
+   account: String"
   [account])
 
-(def-doge-rpc getAddressByCount
-  "String account"
+(def-doge-rpc getAddressByAccount
+  "Use the getaddressesbyaccount method to list all addresses associated with an account.
+   String account"
   [account])
 
 (def-doge-rpc createRawTransaction
@@ -161,7 +168,8 @@
    [blocks])
 
 (def-doge-rpc getNewAddress
-   "String: account)"
+   "getnewaddress always generates and returns a new address.
+    String: account)"
    [account])
 
 (def-doge-rpc getRawMemPool
@@ -268,7 +276,8 @@
    [dogecoinaddress amount comment commentTo])
 
 (def-doge-rpc setAccount
-   "String: dogecoinaddress
+   "setaccount changes the account associated with an existing address. Coins previously received on that address (if any) will be debited from the previous account's balance and credited to the address' new account. Note that doing so may make the previous account's balance negative.
+    String: dogecoinaddress
     String: account)"
    [dogecoinaddress account])
 

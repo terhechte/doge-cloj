@@ -1,5 +1,4 @@
-(ns doge-cloj.config
-  (:import (java.io File)))
+(ns doge-cloj.config)
 
 (declare config)
 
@@ -20,4 +19,5 @@
   "Get the current config dictionary"
   []
   @config-data)
+
 
