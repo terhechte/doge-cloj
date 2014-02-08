@@ -197,7 +197,8 @@
    [dogecoinaddress minconf])
 
 (def-doge-rpc getTransaction
-   "String: txid)"
+   "String: txid
+    Returns: {amount 1.00000000M, confirmations 0, txid 586065da19e707c7b86e11eadf76fc1030bb2fd75c88351f9f0ac43c53f95ac3, time 1391805657, timereceived 1391805657, details [{account , address DNnTAbdQhz7u8CiCfpfmfNoJ3hemqHKRaU, category receive, amount 1.00000000M}]}"
    [txid])
 
 (def-doge-rpc getWork
