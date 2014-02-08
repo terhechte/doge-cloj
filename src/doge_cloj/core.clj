@@ -16,6 +16,7 @@
 
 ; Dogecoin creates two accounts automatically: it implicitly creates a default account with the empty string as its name, and it explicitly creates an account named Your Address when a new wallet is created.
 
+(def ^:dynamic *mock-result* nil)
 
 (defmacro def-doge-rpc [name doc & rest]
   `(defn ~name ~doc ~@rest
@@ -24,19 +25,24 @@
 (defn- perform-call
   "perform a http json call"
   [username password jsondata]
-  (binding [parse/*use-bigdecimals?* true] ; we need big decimals for proper currency support
-    (let [url (config/url-for)
-          json (encode (merge jsondata {:jsonrpc "1.0" :id :doge-clj}))
-          cd {:basic-auth [username password]
-              :content-type :json
-              :accept :json
-              :body json}
-          result (client/post url cd)]
-      (if-let [err (:error result)]
-        (throw err)
-        (if (= 200 (:status result))
-          (-> result :body decode (get "result"))
-          (-> result :body decode (get "error")))))))
+  ; if a binding to mock-result exists, we return mock-result instead.
+  ; this allows us to unit test code depending on doge-clj without having to
+  ; have a dogecoind running
+  (if *mock-result*
+    *mock-result*
+    (binding [parse/*use-bigdecimals?* true] ; we need big decimals for proper currency support
+      (let [url (config/url-for)
+            json (encode (merge jsondata {:jsonrpc "1.0" :id :doge-clj}))
+            cd {:basic-auth [username password]
+                :content-type :json
+                :accept :json
+                :body json}
+            result (client/post url cd)]
+        (if-let [err (:error result)]
+          (throw err)
+          (if (= 200 (:status result))
+            (-> result :body decode (get "result"))
+            (-> result :body decode (get "error"))))))))
   
 
 (defn- get-username
