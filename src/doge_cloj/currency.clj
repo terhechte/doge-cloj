@@ -6,11 +6,6 @@
 
 ;; Simple functions to convert the price of dogecoins to the price of bitcoins
 ;; by converting them over btc
-;; Offers an auto-update in a seperate thread that keeps the values up to date during the application
-;; runtime
-
-; Currently, update once every two hours
-(def ^:dynamic *update-interval* (* 1000 60 120))
 
 ; we locally store the translaction values
 (def btc-doge-value (atom 0))
@@ -31,7 +26,8 @@
         nil
         (reset! the-atom value)))))
 
-(defn- update-values
+(defn update-values
+  "Side effect, update the conversion values, returns nil"
   []
   (binding [*response-error* nil]
     (if-not (extract-value btc-doge-url btc-doge-value (fn [x](Double/parseDouble (get x "value"))))
@@ -41,6 +37,7 @@
       (println "Could not extract value from " btc-doge-url ":" *response-error*))))
 
 (defn- print-values
+  "for debugging purposes"
   []
   (println "doge" @btc-doge-value "dollar" @btc-dollar-value))
 
@@ -52,12 +49,3 @@
   [value]
   (* @btc-dollar-value (conv-doge-btc value)))
 
-(defn update-values-loop
-  "load the current btc and doge values right after startup"
-  []
-  ; we want to do this on a seperate thread, and update from time to time
-  (future
-    (loop []
-      (update-values)
-      (Thread/sleep *update-interval*)
-      (recur))))
