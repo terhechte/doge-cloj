@@ -2,6 +2,7 @@
   (:require [doge-cloj.config :as config]
             [clj-http.client :as client]
             [cheshire.core :refer :all]
+            [clojure.pprint :as pprint]
             [cheshire.parse :as parse]))
 
 ; The DogeCoin API is similar to the Litecoin API (from which Dogecoin was forked)
@@ -244,8 +245,19 @@
 
 (def-doge-rpc listUnspent
    "String: minconf '1'
-    String: maxconf '999999'"
-   [minconf maxconf])
+    String: maxconf '999999'
+    Returns an array of unspent transaction outputs in the wallet that have between minconf and maxconf (inclusive) confirmations. Each output is a 5-element object with keys: txid, output, scriptPubKey, amount, confirmations. txid is the hexadecimal transaction id, output is which output of that transaction, scriptPubKey is the hexadecimal-encoded CScript for that output, amount is the value of that output and confirmations is the transaction's depth in the chain."
+   [minconf]) ;maxconf
+
+(def-doge-rpc lockUnspent
+  "Bool: unlock?
+   List<Map>: transactions
+   Temporarily lock (true) or unlock (false) specified transaction outputs. A locked transaction output will not be chosen by automatic coin selection, when spending bitcoins. Locks are stored in memory only. Nodes start with zero locked outputs, and the locked output list is always cleared (by virtue of process exit) when a node stops or fails."
+   [unlock transactions])
+
+(def-doge-rpc listLockUnspent
+   "List all temporarily locked transaction outputs."
+   [])
 
 (def-doge-rpc move
    "String: fromAccount
@@ -271,7 +283,7 @@
    String: comment"
   [fromaccount  toBitcoinAddresses minconf comment])
 
-(def-doge-rpc sendRawTransation
+(def-doge-rpc sendRawTransaction
    "String: hexString)"
    [hexString])
 
@@ -306,11 +318,13 @@
     String: message)"
    [dogecoinaddress message])
 
+; FIXME: Need to properly support optional types!
 (def-doge-rpc signRawTransaction
-   "String: transactions [{'txid':txid,'vout':n,'scriptPubKey':hex},...]
+   "String: hex
+    String: transactions [{'txid':txid,'vout':n,'scriptPubKey':hex},...]
     String: keys <privatekey1>,...
     String: sigHashType) sighashtype='ALL']"
-   [transactions keys sigHashType])
+   [hex]) ; transactions keys sigHashType
 
 (def-doge-rpc stop
   "" [])
@@ -324,5 +338,4 @@
     String: signature
     String: message)"
    [dogecoinaddress signature message])
-
 
