@@ -31,6 +31,16 @@ After this, you can just call the methods that are defined in core.clj
 (println (doge/getInfo))
 ```
 
+## Unit Testing
+
+If you want to unit test code that relies on calls from this library without starting and or stopping a dogecoind, you can bind `*mock-result*` to the value that you'd like to receive.
+
+``` Clojure
+(binding [ doge/*mock-result* {}]
+      (let [results (core/call-that-relies-on-a-mock-result)]
+        (is (= {} results))))
+```
+
 ## Installation
 
 `doge-clj` is available as a Maven artifact from [Clojars](http://clojars.org/doge-cloj):
