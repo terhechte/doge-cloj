@@ -3,6 +3,8 @@
 A Clojure library designed to connect to the DogeCoinD API.
 Still pretty untested and lacking good unit tests.
 
+This library also includes code that performs unit conversion from Dogecoin to Bitcoin and from Dogecoin to Dollar (via BTC -> Dollar). This can be found in currency.clj.
+
 ## Usage
 
 Import it into your namespace
@@ -29,6 +31,21 @@ After this, you can just call the methods that are defined in core.clj
 
 ``` Clojure
 (println (doge/getInfo))
+```
+
+## Unit Conversion
+
+``` Clojure
+(ns ...
+  (:require [[doge-cloj.currency :as currency]]))
+
+; Before first use, we have to update the converter with
+; current exchange rates. This is only necessary once. However
+; You should make sure to update this value every so many hours
+; to reflect updated exchange rates.
+(currency/update-values)
+
+(println "1000 Doge are " (currency/conv-doge-dollar 1000) "dollar!")
 ```
 
 ## Unit Testing
