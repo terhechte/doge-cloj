@@ -58,6 +58,8 @@ If you want to unit test code that relies on calls from this library without sta
         (is (= {} results))))
 ```
 
+Warning: Currently, you can't mock on a per call basis, meaning if you need to unit test a function that first calls getInfo and then getTransaction you will get the same mock result for both. This will be changed soon.
+
 ## Installation
 
 `doge-clj` is available as a Maven artifact from [Clojars](http://clojars.org/doge-cloj):
